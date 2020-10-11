@@ -20,6 +20,7 @@ module BoundingBox2d exposing
     , scaleAbout, translateBy, translateIn, expandBy, offsetBy
     , at, at_
     , randomPoint
+    , signedDistanceAlong
     )
 
 {-| A `BoundingBox2d` is a rectangular box in 2D defined by its minimum and
@@ -1098,3 +1099,14 @@ randomPoint boundingBox =
             intervals boundingBox
     in
     Random.map2 Point2d.xy (Interval.randomValue x) (Interval.randomValue y)
+
+
+signedDistanceAlong : Types.Axis2d units coordinates -> BoundingBox2d units coordinates -> Interval Float units
+signedDistanceAlong axis boundingBox =
+    let
+        b1 =
+            extrema boundingBox
+    in
+    Interval.from
+        (Point2d.signedDistanceAlong axis (Point2d.xy b1.maxX b1.maxY))
+        (Point2d.signedDistanceAlong axis (Point2d.xy b1.minX b1.minY))
